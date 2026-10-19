@@ -1,0 +1,58 @@
+name: 验证与发布插件
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: plugin-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+      - uses: pnpm/action-setup@v5
+      - name: 校验版本
+        env:
+          RELEASE_TAG: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || '' }}
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFileSync, appendFileSync } from "node:fs";
+          const manifest = JSON.parse(readFileSync("manifest.json", "utf8"));
+          const pkg = JSON.parse(readFileSync("package.json", "utf8"));
+          if (manifest.version !== pkg.version)
+            throw new Error("manifest 与 package 版本不一致");
+          if (process.env.RELEASE_TAG && process.env.RELEASE_TAG !== "v" + pkg.version)
+            throw new Error("标签与插件版本不一致");
+          appendFileSync(process.env.GITHUB_ENV,
+            `ARCHIVE=dist/${manifest.id}-${manifest.version}.zip\n`);
+          NODE
+      - name: 安装公共依赖
+        run: pnpm install --frozen-lockfile
+      - name: 测试
+        run: pnpm test
+      - name: 类型检查与构建
+        run: pnpm build
+      - name: 发布 GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release upload "$RELEASE_TAG" "$ARCHIVE" --clobber
+          else
+            gh release create "$RELEASE_TAG" "$ARCHIVE" --verify-tag --title "$RELEASE_TAG" --notes-file CHANGELOG.md
+          fi

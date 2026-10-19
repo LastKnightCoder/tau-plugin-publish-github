@@ -11,7 +11,7 @@
     "build": "pnpm check && node build.mjs"
   },
   "dependencies": {
-    "@tau/plugins": "file:vendor/tau-plugins-0.21.0-4cd51fb1.tgz",
+    "@tau/plugins": "npm:@xiongtao.xt/tau-plugins@0.21.0",
     "@tau/ui": "npm:@xiongtao.xt/tau-ui@0.1.1",
     "react": "19.2.0",
     "react-dom": "19.2.0"

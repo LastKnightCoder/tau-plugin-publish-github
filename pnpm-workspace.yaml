@@ -1,1 +1,3 @@
 packages: []
+minimumReleaseAgeExclude:
+  - '@xiongtao.xt/tau-plugins@0.21.0'
