@@ -3,7 +3,7 @@
   "id": "tau.publish-github",
   "name": "GitHub Pages 发布",
   "description": "通过 GitHub API 或 Git Push 发布博客到仓库分支",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "minAppVersion": "0.59.0",
   "apiVersion": 1,
   "platform": "desktop",
