@@ -1,0 +1,23 @@
+.tau-publish-github {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+  display: grid;
+  gap: 12px;
+  color: var(--tau-ink-1);
+  font-size: var(--tau-text-sm);
+}
+.tau-publish-github label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.tau-publish-github label:has(button[role="switch"]) {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+.tau-publish-github [role="alert"] {
+  color: var(--tau-danger);
+}
