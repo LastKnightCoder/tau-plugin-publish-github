@@ -1,23 +1,83 @@
+/* 行度量与宿主发布页「服务」行一致：插件行紧接其后，因此每行都带上分隔线 */
 .tau-publish-github {
-  border: 0;
-  padding: 0;
-  margin: 0;
+  display: flex;
+  flex-direction: column;
   min-width: 0;
-  display: grid;
-  gap: 12px;
   color: var(--tau-ink-1);
   font-size: var(--tau-text-sm);
 }
-.tau-publish-github label {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.tau-publish-github label:has(button[role="switch"]) {
-  flex-direction: row;
+.tpg-row {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  min-height: 46px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--tau-line-2);
 }
-.tau-publish-github [role="alert"] {
+.tpg-label {
+  color: var(--tau-ink-2);
+  font-size: var(--tau-text-meta);
+}
+.tpg-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.tpg-grow {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.tpg-mono {
+  font-family: var(--tau-font-mono, ui-monospace, monospace);
+}
+.tpg-muted {
+  overflow: hidden;
+  color: var(--tau-ink-3);
+  font-size: var(--tau-text-micro);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tpg-hint {
+  display: block;
+  color: var(--tau-ink-3);
+  font-size: var(--tau-text-tiny);
+}
+.tpg-disclose {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  border-top: 1px solid var(--tau-line-2);
+  background: none;
+  color: var(--tau-ink-2);
+  font: inherit;
+  font-size: var(--tau-text-meta);
+  text-align: left;
+  cursor: pointer;
+}
+.tpg-disclose:hover {
+  background: var(--tau-bg-hover);
+}
+.tpg-disclose small {
+  margin-left: 6px;
+  color: var(--tau-ink-3);
+  font-size: var(--tau-text-micro);
+}
+.tpg-chevron {
+  color: var(--tau-ink-3);
+  transition: transform 0.15s;
+}
+.tpg-disclose[aria-expanded="true"] .tpg-chevron {
+  transform: rotate(90deg);
+}
+.tpg-error {
+  margin: 0;
+  padding: 8px 12px;
+  border-top: 1px solid var(--tau-line-2);
   color: var(--tau-danger);
+  font-size: var(--tau-text-sm);
 }
