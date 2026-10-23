@@ -1,5 +1,7 @@
 # 开发与发布
 
+当前依赖、平台边界与验证步骤见 [兼容性说明](COMPATIBILITY.md)。
+
 使用 Node.js 22 及以上和 pnpm 11.9.0。插件通过公共 npm 的固定别名依赖 `@tau/plugins → @xiongtao.xt/tau-plugins@0.21.0`、`@tau/ui → @xiongtao.xt/tau-ui@0.1.1`，不需要宿主源码或本地 SDK 归档。
 
 ```sh
