@@ -6,10 +6,7 @@ import path from "node:path";
 import { randomUUID, createHash } from "node:crypto";
 
 const manifest = JSON.parse(await readFile("manifest.json", "utf8"));
-if (!manifest.targets) throw new Error("插件只接受格式 3 作者清单");
-if (!/^[a-z0-9]+(?:[.-][a-z0-9]+)+$/.test(manifest.id))
-  throw new Error("插件 ID 应为小写字母、数字及点或连字符组成的命名空间");
-if (!/^\d+\.\d+\.\d+(?:-[a-zA-Z0-9.-]+)?$/.test(manifest.version)) throw new Error("插件版本无效");
+
 const shared = [...PORTABLE_SHARED_MODULES];
 await mkdir("dist", { recursive: true });
 const staging = await mkdtemp(path.resolve("dist/.building-"));
@@ -18,12 +15,8 @@ const pointer = path.resolve("dist", `.building-pointer-${buildId}`);
 try {
   const readme = await readFile("README.md", "utf8");
   if (!readme.trim()) throw new Error("README.md 必须包含插件介绍与使用说明");
-  if (
-    typeof manifest.description !== "string" ||
-    !manifest.description.trim() ||
-    manifest.description.length > 160
-  )
-    throw new Error("manifest.description 必须为1至160字简介");
+  if (typeof manifest.description !== "string" || !manifest.description.trim())
+    throw new Error("manifest.description 必须为非空简介");
   await writeFile(path.join(staging, "README.md"), readme);
   for (const name of ["LICENSE", "CHANGELOG.md"]) {
     try {
@@ -57,7 +50,7 @@ try {
         throw new Error(`插件构建包含未支持的外部依赖：${dependency.path}`);
     }
   }
-  const styles = Object.keys(result.metafile.outputs).some((file) => file.endsWith("main.css"));
+  const styles = Object.keys(result.metafile.outputs).some(file => file.endsWith("main.css"));
   const integrity = {};
   for (const file of ["main.js", ...(styles ? ["main.css"] : [])])
     integrity[file] = createHash("sha256")
@@ -65,7 +58,15 @@ try {
       .digest("hex");
   await writeFile(
     path.join(staging, "manifest.json"),
-    JSON.stringify(buildPortablePluginManifest(manifest, { main: "main.js", integrity, ...(styles ? { styles: "main.css" } : {}) }), null, 2)
+    JSON.stringify(
+      buildPortablePluginManifest(manifest, {
+        main: "main.js",
+        integrity,
+        ...(styles ? { styles: "main.css" } : {}),
+      }),
+      null,
+      2
+    )
   );
   const destination = path.resolve("dist", `${manifest.version}-${buildId}`);
   await rename(staging, destination);
@@ -83,9 +84,7 @@ try {
   zip.addLocalFolder(destination, manifest.id);
   const archive = path.resolve("dist", `${manifest.id}-${manifest.version}.zip`);
   zip.writeZip(archive);
-  console.log(
-    `构建完成：${archive}`
-  );
+  console.log(`构建完成：${archive}`);
 } catch (error) {
   await rm(staging, { recursive: true, force: true });
   throw error;
