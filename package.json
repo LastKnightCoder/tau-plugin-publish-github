@@ -1,6 +1,6 @@
 {
   "name": "tau-plugin-publish-github",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": true,
   "type": "module",
   "license": "MIT",
@@ -11,8 +11,8 @@
     "build": "pnpm check && node build.mjs"
   },
   "dependencies": {
-    "@tau/plugins": "npm:@xiongtao.xt/tau-plugins@0.37.0",
-    "@tau/ui": "npm:@xiongtao.xt/tau-ui@0.4.0",
+    "@tau/plugins": "npm:@xiongtao.xt/tau-plugins@0.39.0",
+    "@tau/ui": "npm:@xiongtao.xt/tau-ui@0.5.0",
     "react": "19.2.0",
     "react-dom": "19.2.0"
   },
