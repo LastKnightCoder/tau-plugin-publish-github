@@ -2,21 +2,12 @@
   "id": "tau.publish-github",
   "name": "GitHub Pages 发布",
   "description": "通过 GitHub API 或 Git Push 发布博客到仓库分支",
-  "categories": [
-    "blog-publish"
-  ],
-  "keywords": [
-    "github",
-    "博客",
-    "发布"
-  ],
-  "version": "0.1.5",
-  "requires": [
-    "fetch"
-  ],
+  "categories": ["blog-publish"],
+  "keywords": ["github", "博客", "发布"],
+  "version": "0.1.6",
   "targets": {
     "desktop": {
-      "minAppVersion": "0.59.2"
+      "minAppVersion": "0.59.4"
     }
   }
 }
