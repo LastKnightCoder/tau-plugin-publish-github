@@ -72,3 +72,8 @@ it("Git Push 仅调用受控快照服务，凭据不进入远端或目标身份"
   });
   expect((await provider.describe(signal())).identity).not.toContain("test-secret");
 });
+it("声明式表单存的字符串开关：\"false\" 走 GitHub API，\"true\" 走 Git Push", () => {
+  const context = { services: { git: { publishSnapshot: vi.fn() } } } as unknown as PluginContext;
+  expect(createPublisher(context, { ...config, useGitCli: "false" }).mode).toBe("files");
+  expect(createPublisher(context, { ...config, useGitCli: "true" }).mode).toBe("snapshot");
+});

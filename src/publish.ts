@@ -71,7 +71,8 @@ export function createPublisher(context: PluginContext, value: JsonValue): Publi
     assertConfig();
     return (await request(root, signal)).ok;
   };
-  if (config.useGitCli !== false)
+  // 声明式表单把开关存成 "true" / "false"，旧版界面存的是布尔
+  if (config.useGitCli !== false && config.useGitCli !== "false")
     return {
       mode: "snapshot",
       describe,
