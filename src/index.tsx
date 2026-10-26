@@ -6,7 +6,6 @@ import { createPublisher, readConfig, repoBasePath } from "./publish";
 
 declare const __PLUGIN_META__: { id: string; name: string; version: string };
 type Form = Record<string, JsonValue>;
-const SAVE_DELAY = 600;
 
 /** 宿主发布页组卡片内的一行：左标签 + 右控件，度量与宿主「服务」行一致 */
 function Row({ label, children }: { label: string; children: ReactNode }) {
@@ -55,15 +54,6 @@ function Settings({ context, publishConfig }: PluginSettingsProps) {
       setError(failure instanceof Error ? failure.message : String(failure));
     }
   };
-  const saveRef = useRef(save);
-  saveRef.current = save;
-  useEffect(() => {
-    const timer = setTimeout(() => void saveRef.current(form), SAVE_DELAY);
-    return () => clearTimeout(timer);
-  }, [form]);
-  // 关闭抽屉时防抖未到期的修改也要落盘
-  useEffect(() => () => void saveRef.current(formRef.current), []);
-
   const string = (key: string) => (typeof form[key] === "string" ? (form[key] as string) : "");
   const update = (patch: Form) => setForm((old) => ({ ...old, ...patch }));
   const input = (key: string, label: string, extra?: { mono?: boolean; placeholder?: string }) => (
@@ -74,7 +64,6 @@ function Settings({ context, publishConfig }: PluginSettingsProps) {
       placeholder={extra?.placeholder}
       value={string(key)}
       onChange={(event) => update({ [key]: event.target.value })}
-      onBlur={() => void save(formRef.current)}
     />
   );
   const list = async (url: string): Promise<any[]> => {
@@ -135,8 +124,7 @@ function Settings({ context, publishConfig }: PluginSettingsProps) {
           type={reveal ? "text" : "password"}
           value={string("token")}
           onChange={(event) => update({ token: event.target.value })}
-          onBlur={() => void save(formRef.current)}
-        />
+            />
         <Button size="sm" variant="ghost" onClick={() => setReveal((value) => !value)}>
           {reveal ? "隐藏" : "显示"}
         </Button>
@@ -256,6 +244,7 @@ function Settings({ context, publishConfig }: PluginSettingsProps) {
           )}
         </>
       )}
+      <Button variant="primary" onClick={() => void save(formRef.current)}>保存配置</Button>
       {error && (
         <p role="alert" className="tpg-error">
           {error}
