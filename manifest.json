@@ -4,7 +4,7 @@
   "description": "通过 GitHub API 或 Git Push 发布博客到仓库分支",
   "categories": ["blog-publish"],
   "keywords": ["github", "博客", "发布"],
-  "version": "0.1.9",
+  "version": "0.1.10",
   "targets": {
     "desktop": {
       "minAppVersion": "0.60.7"
