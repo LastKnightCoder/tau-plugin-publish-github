@@ -1,6 +1,12 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import "./styles.css";
-import { definePlugin, type JsonValue, type PluginSettingsProps } from "@tau/plugins";
+import {
+  definePlugin,
+  useSettingsDraft,
+  type JsonValue,
+  type PluginSettingsProps,
+  type SettingsDraftChange,
+} from "@tau/plugins";
 import { Button, Input, Select, Switch } from "@tau/ui";
 import { createPublisher, readConfig, repoBasePath } from "./publish";
 
@@ -17,6 +23,36 @@ function Row({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
+const LABELS: [key: string, label: string][] = [
+  ["token", "Token"],
+  ["repo", "仓库"],
+  ["branch", "部署分支"],
+  ["basePath", "访问路径"],
+  ["committerName", "提交者名称"],
+  ["committerEmail", "提交者邮箱"],
+  ["useGitCli", "Git Push"],
+  ["cacheLabel", "缓存目录"],
+];
+
+/** 离开确认里的修改清单；Token 只说改了 */
+function describeChanges(saved: Form, form: Form): SettingsDraftChange[] {
+  const show = (key: string, value: JsonValue | undefined) =>
+    key === "useGitCli"
+      ? value === false
+        ? "关"
+        : "开"
+      : key === "cacheLabel"
+        ? (typeof value === "string" && value) || "默认"
+        : typeof value === "string"
+          ? value
+          : "";
+  return LABELS.filter(
+    ([key]) => show(key, saved[key]) !== show(key, form[key]) || (key === "token" && saved[key] !== form[key])
+  ).map(([key, label]) =>
+    key === "token" ? { label } : { label, from: show(key, saved[key]), to: show(key, form[key]) }
+  );
+}
+
 function Settings({ context, publishConfig }: PluginSettingsProps) {
   const [form, setForm] = useState<Form>(() => readConfig(publishConfig?.value ?? {}));
   const [reading, setReading] = useState<"repo" | "branch" | null>(null);
@@ -26,31 +62,37 @@ function Settings({ context, publishConfig }: PluginSettingsProps) {
   const [repos, setRepos] = useState<string[]>([]),
     [branches, setBranches] = useState<string[]>([]);
   // 最近一次提交给宿主的配置：宿主回写同一份值时不覆盖正在输入的表单
-  const savedJson = useRef(JSON.stringify(form));
-  const configRef = useRef(publishConfig);
-  configRef.current = publishConfig;
+  const [saved, setSaved] = useState<Form>(form);
+  const savedJson = JSON.stringify(saved);
   const formRef = useRef(form);
   formRef.current = form;
 
   useEffect(() => {
     const next = readConfig(publishConfig?.value ?? {});
-    const json = JSON.stringify(next);
-    if (json === savedJson.current) return;
-    savedJson.current = json;
-    setForm(next);
+    setSaved((old) => (JSON.stringify(old) === JSON.stringify(next) ? old : next));
+    setForm((old) => (JSON.stringify(old) === savedJson ? next : old));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [publishConfig?.value]);
 
-  const save = async (value: Form) => {
-    const json = JSON.stringify(value);
-    const target = configRef.current;
-    if (!target || json === savedJson.current) return;
-    const previous = savedJson.current;
-    savedJson.current = json;
+  const changes = describeChanges(saved, form);
+  const save = async () => {
+    if (!publishConfig) throw new Error("请更新 Tau 以保存发布配置");
+    const value = formRef.current;
+    await publishConfig.save(value as JsonValue);
+    setSaved(value);
+    setError("");
+  };
+  const draft = useSettingsDraft({
+    dirty: changes.length > 0,
+    changes,
+    saveLabel: "保存配置",
+    save,
+    reset: () => setForm(saved),
+  });
+  const saveHere = async () => {
     try {
-      await target.save(value as JsonValue);
-      setError("");
+      await save();
     } catch (failure) {
-      savedJson.current = previous;
       setError(failure instanceof Error ? failure.message : String(failure));
     }
   };
@@ -244,7 +286,11 @@ function Settings({ context, publishConfig }: PluginSettingsProps) {
           )}
         </>
       )}
-      <Button variant="primary" onClick={() => void save(formRef.current)}>保存配置</Button>
+      {!draft && (
+        <Button variant="primary" onClick={() => void saveHere()}>
+          保存配置
+        </Button>
+      )}
       {error && (
         <p role="alert" className="tpg-error">
           {error}
