@@ -28,7 +28,10 @@ it("仓库分页加载全名，分支按 owner/repo 编码", async () => {
     if (url.includes("/user/repos"))
       return Response.json(
         url.endsWith("page=1")
-          ? Array.from({ length: 100 }, (_, index) => ({ full_name: `o/r${index}`, private: false }))
+          ? Array.from({ length: 100 }, (_, index) => ({
+              full_name: `o/r${index}`,
+              private: false,
+            }))
           : [{ full_name: "o/last", private: true }]
       );
     return Response.json([{ name: "gh-pages" }]);
@@ -37,8 +40,10 @@ it("仓库分页加载全名，分支按 owner/repo 编码", async () => {
   const [repo, branch] = form.groups[1].fields;
   if (repo.type !== "remote-choice" || branch.type !== "remote-choice") throw new Error("类型错误");
   const repos = await repo.load({ token: "t" }, signal());
-  expect(repos).toHaveLength(101);
-  expect(repos.at(-1)).toEqual({ value: "o/last", description: "私有" });
+  expect(repos.map(option => option.value)).toEqual([
+    ...Array.from({ length: 100 }, (_, index) => `o/r${index}`),
+    "o/last",
+  ]);
   expect(await branch.load({ token: "t", repo: "o/my blog" }, signal())).toEqual([
     { value: "gh-pages" },
   ]);

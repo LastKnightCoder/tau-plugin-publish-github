@@ -1,0 +1,22 @@
+{
+  "settings.title": "GitHub 發佈設定",
+  "account.title": "帳號",
+  "account.description": "Token 需要目標儲存庫的內容寫入權限；受保護分支仍遵守儲存庫規則。",
+  "account.createToken": "建立 Token",
+  "account.token": "Token",
+  "location.title": "發佈位置",
+  "repository.label": "儲存庫",
+  "repository.private": "私人",
+  "repository.public": "公開",
+  "branch.label": "部署分支",
+  "basePath.label": "存取路徑",
+  "basePath.description": "留空則依儲存庫推斷：使用者首頁儲存庫為 /，其他儲存庫為 /儲存庫名稱/",
+  "push.title": "提交與推送",
+  "committerName.label": "提交者名稱",
+  "committerEmail.label": "提交者電子郵件",
+  "gitPush.label": "Git Push",
+  "gitPush.description": "使用系統 Git 推送；關閉後改用 GitHub API 逐一上傳檔案",
+  "cache.label": "快取目錄",
+  "cache.placeholder": "應用程式快取目錄（預設）",
+  "cache.description": "儲存 Git 工作副本，加快之後的發佈"
+}

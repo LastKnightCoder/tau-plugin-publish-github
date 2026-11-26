@@ -1,0 +1,22 @@
+{
+  "settings.title": "GitHub publishing settings",
+  "account.title": "Account",
+  "account.description": "The token needs content write access to the target repository. Protected branches still follow repository rules.",
+  "account.createToken": "Create token",
+  "account.token": "Token",
+  "location.title": "Publishing destination",
+  "repository.label": "Repository",
+  "repository.private": "Private",
+  "repository.public": "Public",
+  "branch.label": "Deployment branch",
+  "basePath.label": "Base path",
+  "basePath.description": "Leave blank to infer from the repository: / for a user site, or /repository-name/ for other repositories.",
+  "push.title": "Commit and push",
+  "committerName.label": "Committer name",
+  "committerEmail.label": "Committer email",
+  "gitPush.label": "Git Push",
+  "gitPush.description": "Push with system Git. When disabled, upload individual files through the GitHub API.",
+  "cache.label": "Cache directory",
+  "cache.placeholder": "App cache directory (default)",
+  "cache.description": "Keep a Git working copy to speed up future publishing"
+}

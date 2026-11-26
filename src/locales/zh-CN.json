@@ -1,0 +1,22 @@
+{
+  "settings.title": "GitHub 发布配置",
+  "account.title": "账号",
+  "account.description": "Token 需要目标仓库的内容写权限；受保护分支仍遵守仓库规则。",
+  "account.createToken": "创建 Token",
+  "account.token": "Token",
+  "location.title": "发布位置",
+  "repository.label": "仓库",
+  "repository.private": "私有",
+  "repository.public": "公开",
+  "branch.label": "部署分支",
+  "basePath.label": "访问路径",
+  "basePath.description": "留空按仓库推断：用户主页仓库为 /，其他仓库为 /仓库名/",
+  "push.title": "提交与推送",
+  "committerName.label": "提交者名称",
+  "committerEmail.label": "提交者邮箱",
+  "gitPush.label": "Git Push",
+  "gitPush.description": "使用系统 Git 推送；关闭后改用 GitHub API 逐个上传文件",
+  "cache.label": "缓存目录",
+  "cache.placeholder": "应用缓存目录（默认）",
+  "cache.description": "保存 Git 工作副本，加快之后的发布"
+}
