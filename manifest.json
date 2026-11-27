@@ -4,10 +4,23 @@
   "description": "通过 GitHub API 或 Git Push 发布博客到仓库分支",
   "categories": ["blog-publish"],
   "keywords": ["github", "博客", "发布"],
-  "version": "0.1.10",
+  "locales": ["zh-CN", "zh-TW", "en-US"],
+  "i18n": {
+    "zh-TW": {
+      "name": "GitHub Pages 發佈",
+      "description": "透過 GitHub API 或 Git Push 發佈部落格到儲存庫分支。",
+      "keywords": ["GitHub", "部落格", "發佈"]
+    },
+    "en-US": {
+      "name": "GitHub Pages Publish",
+      "description": "Publish your blog to a repository branch via GitHub API or Git Push.",
+      "keywords": ["GitHub", "blog", "publish"]
+    }
+  },
+  "version": "0.1.11",
   "targets": {
     "desktop": {
-      "minAppVersion": "0.60.7"
+      "minAppVersion": "0.68.0"
     }
   }
 }

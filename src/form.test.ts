@@ -1,6 +1,10 @@
 import { expect, it, vi } from "vitest";
 import { createPublishForm } from "./form";
 
+vi.mock("./i18n", () => ({
+  messages: { ref: (key: string) => ({ kind: "i18n", key }) },
+}));
+
 const signal = () => new AbortController().signal;
 
 it("缓存目录只在 Git Push 开启时显示，名称与标识分开保存", () => {
